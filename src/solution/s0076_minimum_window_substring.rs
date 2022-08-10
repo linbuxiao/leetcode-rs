@@ -34,13 +34,13 @@
 
 link: https://leetcode.cn/problems/minimum-window-substring/
 */
-
 use std::collections::HashMap;
-
+#[allow(unused)]
 struct Solution {}
 
 impl Solution {
-    pub fn min_window(s: String, t: String) -> String {
+    #[allow(unused)]
+    pub fn min_window_over_time(s: String, t: String) -> String {
         if s.len() < t.len() {
             return "".to_string();
         }
@@ -79,26 +79,96 @@ impl Solution {
             }
         }
         let mut min_len = s.len();
-		let mut start = 0;
-		let mut end = s.len() - 1;
-		let mut flag = false;
+        let mut start = 0;
+        let mut end = s.len() - 1;
+        let mut flag = false;
         for arr in result.iter_mut() {
-			if arr.len() < t.len() {
-				continue;
-			}
-			flag = true;
-			arr.sort();
-			let tmp_len = arr[arr.len() - 1] - arr[0] + 1;
-			if tmp_len < min_len {
-				min_len = tmp_len;
-				start = arr[0];
-				end = arr[arr.len() - 1];
-			}
-        };
-		if !flag {
-			return "".to_string()
-		}
+            if arr.len() < t.len() {
+                continue;
+            }
+            flag = true;
+            arr.sort();
+            let tmp_len = arr[arr.len() - 1] - arr[0] + 1;
+            if tmp_len < min_len {
+                min_len = tmp_len;
+                start = arr[0];
+                end = arr[arr.len() - 1];
+                if min_len == t.len() {
+                    break;
+                }
+            }
+        }
+        if !flag {
+            return "".to_string();
+        }
         s[start..end + 1].to_string()
+    }
+
+    #[allow(unused)]
+    pub fn min_window(s: String, t: String) -> String {
+        let default_value = "".to_string();
+        if s.len() < t.len() {
+            return default_value;
+        }
+        let mut left = 0;
+        let mut right = 0;
+        let mut r = default_value.clone();
+        let mut target_map: HashMap<char, usize> = HashMap::new();
+        for c in t.chars() {
+            match target_map.get(&c) {
+                Some(n) => {
+                    target_map.insert(c.clone(), n + 1);
+                }
+                None => {
+                    target_map.insert(c.clone(), 1);
+                }
+            }
+        }
+        let mut use_map: HashMap<char, usize> = HashMap::new();
+        let f = s.as_bytes()[0] as char;
+        use_map.insert(f, 1);
+        while right < s.len() || left > right {
+            let is_meet = {
+                let m = use_map.clone();
+                let mut result = true;
+                for (k, v) in &target_map {
+                    let n = m.get(k).unwrap_or(&0);
+                    if n < v {
+                        result = false;
+                        break;
+                    }
+                }
+                result
+            };
+
+            if is_meet {
+                let new_str = &s[left..right + 1];
+                if r.len() > 0 && new_str.len() < r.len() || r.len() == 0 && new_str.len() <= s.len()
+                {
+                    r = new_str.to_string();
+                }
+                let left_char = s.as_bytes()[left] as char;
+                left = left + 1;
+                if let Some(n) = use_map.get(&left_char) {
+                    use_map.insert(left_char, n - 1);
+                };
+            } else {
+                right = right + 1;
+                if right == s.len() {
+                    break;
+                }
+                let v = s.as_bytes()[right] as char;
+                match use_map.get(&v) {
+                    Some(n) => {
+                        use_map.insert(v, n + 1);
+                    }
+                    None => {
+                        use_map.insert(v, 1);
+                    }
+                };
+            }
+        }
+        r
     }
 }
 
@@ -125,15 +195,15 @@ mod tests {
             "abc".to_string(),
             Solution::min_window("abc".to_string(), "bca".to_string())
         );
-		assert_eq!(
+        assert_eq!(
             "cwae".to_string(),
             Solution::min_window("cabwefgewcwaefgcf".to_string(), "cae".to_string())
         );
-		assert_eq!(
+        assert_eq!(
             "".to_string(),
             Solution::min_window("babb".to_string(), "baba".to_string())
         );
-		assert_eq!(
+        assert_eq!(
             "".to_string(),
             Solution::min_window("aacbaccccaabcabbcab".to_string(), "bcbbacaaab".to_string())
         );

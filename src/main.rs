@@ -1,4 +1,5 @@
 pub mod solution;
+pub mod util;
 
 use serde::{Deserialize, Serialize};
 use tokio::fs::{write, read_to_string, read};
