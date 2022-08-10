@@ -34,7 +34,6 @@ async fn main() {
         .body(req_str).header("Content-Type", "application/json")
         .send().await.unwrap();
     let res_text = res.text().await.unwrap();
-    print!("{}", res_text);
     // get all response
     let resp_content: QuestionResponse = serde_json::from_str(&res_text).unwrap();
     // remove html
