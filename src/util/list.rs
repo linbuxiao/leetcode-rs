@@ -1,54 +1,41 @@
 #[derive(PartialEq, Eq, Clone, Debug)]
-pub struct ListNode<T> {
-  pub val: T,
-  pub next: Option<Box<ListNode<T>>>
+pub struct ListNode {
+  pub val: i32,
+  pub next: Option<Box<ListNode>>
 }
 
-impl<T> ListNode<T> {
+impl ListNode {
   #[inline]
-  fn new(val: T) -> Self {
+  pub fn new(val: i32) -> Self {
     ListNode {
       next: None,
       val
     }
   }
-
-  fn get_last(&mut self) -> &mut Self {
-    if let Some(ref mut x) = self.next {
-        return x.get_last()
-    }
-    self
-  }
-
-  fn set_next(&mut self, node: Self) {
-    self.next = Some(Box::new(node));
-  }
-
-  fn push(&mut self, val: T) {
-    let new_node = ListNode::new(val);
-    self.get_last().set_next(new_node);
-  }
 }
 
-pub fn create_by_vec_i32<T: Copy>(arr: Vec<T>) -> Option<Box<ListNode<T>>> {
-    if arr.len() == 0 {
-        return None
-    }
-    let mut iter = arr.iter();
-    let mut list = ListNode::new(*iter.next().unwrap());
-    while let Some(v) = iter.next() {
-        list.push(*v);
-    };
-    Some(Box::new(list))
-  }
+impl ListNode {
+	pub fn remove_next(&mut self) {
+		if let Some(node) = &self.next {
+			self.next = node.next.to_owned()
+		} else {
+			self.next = None
+		}
+	}
 
-mod tests {
-    use super::*;
+	pub fn get_last(&mut self) -> &mut Self {
+		if let Some(ref mut x) = self.next {
+			return x.get_last()
+		}
+		return self
+	}
 
-    #[test]
-    fn test_create_by_vec_i32() {
-        let arr = vec![1,2,2,1];
-        let list = create_by_vec_i32(arr);
-        print!("{:?}", list);
-    }
+	pub fn set_next(&mut self, node: Self) {
+		self.next = Some(Box::new(node));
+	}
+
+	pub fn push(&mut self, val: i32) {
+		let new_node = Self::new(val);
+		self.get_last().set_next(new_node);
+	}
 }
