@@ -35,11 +35,9 @@
 link: https://leetcode.cn/problems/minimum-window-substring/
 */
 use std::collections::HashMap;
-#[allow(unused)]
 struct Solution {}
 
 impl Solution {
-    #[allow(unused)]
     pub fn min_window_over_time(s: String, t: String) -> String {
         if s.len() < t.len() {
             return "".to_string();
@@ -104,7 +102,6 @@ impl Solution {
         s[start..end + 1].to_string()
     }
 
-    #[allow(unused)]
     pub fn min_window(s: String, t: String) -> String {
         let default_value = "".to_string();
         if s.len() < t.len() {
@@ -204,7 +201,7 @@ mod tests {
             Solution::min_window("babb".to_string(), "baba".to_string())
         );
         assert_eq!(
-            "".to_string(),
+            "aabcabbcab".to_string(),
             Solution::min_window("aacbaccccaabcabbcab".to_string(), "bcbbacaaab".to_string())
         );
     }

@@ -27,7 +27,6 @@ link: https://leetcode.cn/problems/palindrome-linked-list/
 use std::vec;
 use crate::util::list::ListNode;
 
-#[allow(dead_code)]
 struct Solution {}
 
 

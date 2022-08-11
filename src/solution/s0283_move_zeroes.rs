@@ -24,8 +24,7 @@
 
 link: https://leetcode.cn/problems/move-zeroes/
 */
-
-#[warn(dead_code)]
+#![allow(unused)]
 struct Solution {}
 
 impl Solution {

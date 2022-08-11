@@ -1,3 +1,5 @@
+#![allow(unused)]
+
 pub mod solution;
 pub mod util;
 
@@ -14,7 +16,6 @@ struct Cli {
 
 const QUESTIONS_URL: &str = "https://leetcode.cn/api/problems/algorithms/";
 const LEETCODE_GRAPHQL_URL: &str = "https://leetcode.cn/graphql/";
-
 #[tokio::main]
 async fn main() {
     // init cli
