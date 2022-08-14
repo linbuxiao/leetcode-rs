@@ -31,7 +31,7 @@
 link: https://leetcode.cn/problems/sort-list/
 */
 
-use std::i32::MIN;
+use std::{i32::MIN};
 
 struct Solution {}
 
@@ -54,67 +54,43 @@ impl ListNode {
 
 
 impl ListNode {
-	fn exchange_node(&mut self) {
-		if let Some(mut b) = self.next.clone() {
-			if let Some(mut c) = b.next {
-				b.next = c.next.clone();
-				c.next = Some(b);
-				self.next = Some(c);
-			}
-		}
-	}
-
-	fn is_last(&self) -> bool {
-		let cp = self.clone().next;
-		if cp.is_none() {
-			return false;
-		};
-		if cp.next.is_none() || cp.next.unwrap().next.is_none() {
-			return true ;
-		}
-		false
+	fn set_next(&mut self, val: i32) {
+		let new_node = Box::new(ListNode{val, next: None});
+		self.next = Some(new_node);
 	}
 }
+
+type SortListNode = Option<Box<ListNode>>;
+
 impl Solution {
-    pub fn sort_list_bubbling(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
-		if head.is_none() {
-			return None
-		}
-		let mut dummy = Box::new(ListNode{val: MIN, next: head});
-		let mut p = dummy.as_mut();
-		while p.next.clone().is_some() {
-			let mut f = true;
-			while p.next.clone().is_some() && p.next.clone().unwrap().next.is_some() {
-				if let Some(b) = p.next.clone() {
-					if let Some(c) = b.clone().next {
-						if b.as_ref().val > c.as_ref().val {
-							f = false;
-							p.exchange_node();
-						}
-					}
-				}
-				p  = p.next.as_mut().unwrap().as_mut();
-			}
-			if f { break; }
-			p = dummy.as_mut();
-		}
-		dummy.next
-    }
-
 	pub fn sort_list(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
-		let cp = head.clone();
-		if cp.is_none() {
-			return None ;
-		};
-		if cp.unwrap().is_last() {
-			let mut dummy = Box::new(ListNode{val: 0, next: head});
-			dummy.exchange_node();
-			return dummy.next;
-		}
-
-
-		todo!()
+		let mut arr = Self::get_arr(head.clone());
+		arr.sort_unstable();
+		Self::get_list(arr)
     }
+
+	fn get_arr(head: Option<Box<ListNode>>) -> Vec<i32> {
+		let mut result = vec![];
+		let mut p = head;
+		while let Some(node) = p {
+			result.push(node.val);
+			p = node.next;
+		}
+		result
+	}
+
+	fn get_list(mut arr: Vec<i32>) -> Option<Box<ListNode>> {
+		if arr.is_empty() {
+			return None ;
+		}
+		let mut prev = None ;
+		while let Some(last) = arr.pop() {
+			let mut node = ListNode::new(last);
+			node.next = prev;
+			prev = Some(Box::new(node));
+		}
+		prev
+	}
 }
 
 /*
@@ -127,7 +103,6 @@ mod tests {
 
 	#[test]
 	fn test_sort_list() {
-
 		todo!()
 	}
 }
