@@ -33,11 +33,50 @@ link: https://leetcode.cn/problems/remove-nth-node-from-end-of-list/
 
 use std::rc::Rc;
 
-use crate::util::list::ListNode;
-
 struct Solution {}
 
 // Definition for singly-linked list.
+#[derive(PartialEq, Eq, Clone, Debug)]
+pub struct ListNode {
+  pub val: i32,
+  pub next: Option<Box<ListNode>>
+}
+
+impl ListNode {
+  #[inline]
+  fn new(val: i32) -> Self {
+    ListNode {
+      next: None,
+      val
+    }
+  }
+}
+
+impl ListNode {
+	fn remove_next(&mut self) {
+		if let Some(node) = &self.next {
+			self.next = node.next.to_owned()
+		} else {
+			self.next = None
+		}
+	}
+
+	fn get_last(&mut self) -> &mut Self {
+		if let Some(ref mut x) = self.next {
+			return x.get_last()
+		}
+		return self
+	}
+
+	fn set_next(&mut self, node: Self) {
+		self.next = Some(Box::new(node));
+	}
+
+	fn push(&mut self, val: i32) {
+		let new_node = Self::new(val);
+		self.get_last().set_next(new_node);
+	}
+}
 
 impl Solution {
     pub fn remove_nth_from_end(head: Option<Box<ListNode>>, n: i32) -> Option<Box<ListNode>> {
@@ -73,7 +112,7 @@ mod tests {
 
 	#[test]
 	fn test_remove_nth_node_from_end_of_list() {
-		let mut list = ListNode::new(1);
+		let mut list = ListNode::new(1); 
 		list.push(2);
 		list.push(3);
 		list.push(4);

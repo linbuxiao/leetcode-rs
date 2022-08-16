@@ -3,3 +3,5 @@ mod s0234_palindrome_linked_list;
 mod s0283_move_zeroes;
 mod s0019_remove_nth_node_from_end_of_list;
 mod s0148_sort_list;
+mod s0155_min_stack;
+mod s0239_sliding_window_maximum;
